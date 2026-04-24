@@ -2,4 +2,4 @@
 cmd = "./gradlew build"
 
 [start]
-cmd = "java -jar build/libs/*.jar"
+cmd = "sh -c 'java -jar build/libs/*.jar'"
