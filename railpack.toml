@@ -1,5 +1,8 @@
+<<<<<<< railway/code-change-5zcLBs
+=======
 [build]
 cmd = "./gradlew build"
 
+>>>>>>> main
 [start]
 cmd = "sh -c 'java -jar build/libs/*.jar'"
