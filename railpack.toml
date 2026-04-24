@@ -1,0 +1,2 @@
+[start]
+cmd = "sh -c 'java -jar build/libs/*.jar'"
