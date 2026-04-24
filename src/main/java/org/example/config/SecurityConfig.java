@@ -38,19 +38,16 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
-                        .frameOptions(frame -> frame.sameOrigin())
-                )
+                        .frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas obligatorias
                         .requestMatchers("/api/users/login", "/api/users/register").permitAll()
                         .requestMatchers("/ws-habitup/**").permitAll()
-                        // Cualquier otra ruta requiere estar autenticado
-                        .anyRequest().authenticated()
-                )
-                // Agregar filtro JWT antes del filtro de autenticación (UsernamePasswordAuthenticationFilter)
-                .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter,
+                        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
@@ -60,8 +57,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permite todo para que Vercel no tenga problemas de CORS
-        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        // Dominios permitidos (Hostinger producción + Localhost para desarrollo)
+        configuration.setAllowedOrigins(List.of("https://habitup.devpaulvelasco.com", "http://localhost:5173"));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
